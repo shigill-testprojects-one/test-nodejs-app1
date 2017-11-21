@@ -1,0 +1,10 @@
+@charset 'utf-8';
+
+//
+//@imprt 'settings'
+//@import '../bower_components/foundation-sites/scss/foundation';
+
+@import '../bower_components/foundation-sites/scss/foundation';
+@include foundation-everything;
+
+@import 'main';

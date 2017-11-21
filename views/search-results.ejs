@@ -1,0 +1,157 @@
+<% include header %>
+
+<div id="spinner-div">
+</div>
+     <% include banner %>
+<div class="row results-page" ng-controller="SearchResultsController">
+ <div class="off-canvas-wrapper">
+   <div class="off-canvas-wrapper-inner" data-off-canvas-wrapper>
+
+
+     <!--filters-->  
+     <aside class="off-canvas position-left reveal-for-large filters" id="offCanvas" data-off-canvas>
+   
+               <button type="button" class="button button-filter hide-for-large" data-toggle="offCanvas" style="margin-top: -3px;">Back to search results <i class="fa fa-arrow-circle-right" aria-hidden="true"></i></button>
+
+      <div class="filter"><a ng-click="resetFilters()" class="float-right small white reset" id="uncheck">Reset <i class="fa fa-times" aria-hidden="true"></i></a>Filters</div>
+      <div class="lead-gray">Eligibility</div>
+ 
+
+      <fieldset class="fieldset-filter">
+        <legend>Gender</legend>
+        <div class="button-group round toggle expanded ">
+        
+        <input id="female" type="radio" name="gender" ng-model="filters.gender" value="Female" ><label for="female" class="button">Female</label>
+          
+        <input id="male" type="radio" name="gender" ng-model="filters.gender" value="Male"><label for="male" class="button">Male</label>
+        
+        <input id="both" type="radio" name="gender" ng-model="filters.gender" value="Both"><label for="both" class="button">All</label>
+       
+        </div>
+      </fieldset>
+      <fieldset class="fieldset-filter">
+        <legend>Age</legend>
+        <div class="button-group round toggle expanded ">
+    
+        <input id="under18" type="checkbox" ng-model="filters.age['Child']" checked><label for="under18" class="button">Children</label>
+    
+        <input id="over18" type="checkbox" ng-model="filters.age['Adult']" checked><label for="over18" class="button">Adults &gt; 18</label>
+          </div>
+        {{ filters.minAge }}
+        {{ filters.maxAge }}
+      </fieldset>
+      <fieldset class="fieldset-filter" style="padding-bottom: 0;">
+        <legend>Health</legend>
+        <div class="button-group round toggle expanded " style="margin-bottom: 0;">
+        <input id="healthy" type="checkbox" ng-model="filters.health['Accepts Healthy Volunteers']" checked><label for="healthy" class="button">Healthy</label>
+        <input id="prev-diag" type="checkbox" ng-model="filters.health['No']" checked><label for="prev-diag" class="button">Diagnosed</label>
+          </div>
+      </fieldset> 
+       <div class="lead-gray">Trial</div>
+      <fieldset class="fieldset-filter">
+        <legend>Phase</legend>
+                <div class="button-group round toggle expanded" >
+        <input id="p1" class="phase_num" type="checkbox" ng-model="filters.phases['Phase 1']"><label for="p1"  class="button">1</label>
+        <input id="p2" class="phase_num" type="checkbox" ng-model="filters.phases['Phase 2']"><label for="p2"  class="button">2</label>
+        <input id="p3" class="phase_num" type="checkbox" ng-model="filters.phases['Phase 3']"><label for="p3"  class="button">3</label>
+        <input id="p4" class="phase_num" type="checkbox" ng-model="filters.phases['Phase 4']"><label for="p4"  class="button">4</label>
+        <input id="pn" class="phase_all" type="checkbox" ng-model="filters.phases['N/A']" checked><label for="pn"  class="button">All</label>
+        </div>
+      </fieldset>
+      
+      <fieldset class="fieldset-filter" style="padding-bottom: 0;">
+      
+      <legend>Last Updated</legend>
+        <select ng-model="lastUpdated" class="lastUpdated">
+          <option value="0" selected>Any time</option>
+          <option value="180">Last six months</option>
+          <option value="90">Last three months</option>
+          <option value="30">Last month</option>
+        </select>
+         </fieldset>
+    </aside>
+    <!--end filters-->
+    <div class="small-12 medium-9 columns off-canvas-content" data-off-canvas-content>
+      <div class="row">
+       <div class="small-12 columns">
+         <button type="button" class="button button-filter hide-for-large" data-toggle="offCanvas"><i class="fa fa-filter fa-fw"></i>Open Eligibility Filters</button>
+
+<!--
+         <fieldset  class="fieldset">
+           <legend>New Search:</legend>
+-->
+          <div class="bump9 results-search">
+           <% include search %>
+           </div>
+         
+<!--        </fieldset>-->
+      </div>
+  
+       
+        <div class="small-12 columns">
+         <h1>Search Results</h1>
+          <h5 class="results-for"><strong ng-class="data.numMatches == 0 ? 'alert' : ''">{{ data.numMatches }} research studies</strong> found for <strong>{{ data.query }}</strong> <span ng-hide="data.numMatches == 0"> and <strong ng-class="filtered.length == 0 ? 'alert' : ''">{{ filtered.length }} match your eligibility filters</strong></span></h5>
+        </div>
+      </div>
+      
+      <!--error no results found -->
+     <div class="callout warning bump20" ng-show="data.numMatches == 0 || filtered.length == 0 ">
+       <p ng-show="data.numMatches == 0">The search for <strong>{{ data.query }}</strong> did not match any clinical research studies.  </p>
+       
+         <p ng-show="data.numMatches == 0">Suggestions: </p>
+       
+       <ul ng-show="data.numMatches == 0"><li>Make sure all words are spelled correctly.</li><li>Try different keywords.</li><li>Try more general keywords.</li><li>Try fewer keywords.</li></ul>
+     
+       <p ng-show="data.numMatches >= 1 && filtered.length == 0 ">
+       We have not found any matches using your filters. Try using broader eligibility filter parameters. 
+       </p>
+        </div>
+        
+      
+     <div class="row" ng-hide="data.related.length <= 1">
+          <div class="small-12 columns">
+           <div class="related">Related searches</div>
+          <span ng-repeat="term in data.related" class="search-term">
+            <a href="/search-results/{{ encodeURI(term) }}" ng-hide="data.related.length == 1">{{ term }}</a>{{$last ? '' : ($index==data.length-2) ? ' and ' : ', '}}
+          </span>
+      </div>
+     </div>
+     
+     
+     
+     
+     <div class="rowx bump20" ng-hide="data.numMatches == 0 || filtered.length == 0 ">
+         <div class="small-12 medium-9 columns sortBy">Sort by</div>
+         <div class="small-12 medium-3 columns sortByPull"> 
+         <i class="fa fa-chevron-circle-down" aria-hidden="true"></i>
+         <select ng-model="sortType">
+          <option value="relevance" selected>Relevance </option>
+          <option value="newestToOldest">Newest to oldest</option>
+          <option value="oldestToNewest">Oldest to newset</option>
+          <option value="alphabetical">Alphabetical</option>
+        </select></div>
+     </div>
+
+    <!-- Search Results Listing -->
+    <div id="results" ng-show="showResults">
+      <div class="rowx  ct" ng-repeat="study in data.results | orderBy: sortFunction | filter: combinedFilter as filtered">
+         <search-result></search-result>
+       </div>
+    </div>
+</div>
+<div class="footer-top">
+     <a href="#top"><i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> Back to Top</a>
+ </div>
+<a class="exit-off-canvas"></a>
+
+</div>
+</div>
+
+
+</div>
+
+<script>
+  var data = <%- JSON.stringify(data) %>;
+</script>
+
+<% include footer %>

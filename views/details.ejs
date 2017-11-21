@@ -1,0 +1,161 @@
+<% include header %>
+<% include banner %>
+<div class="row details" ng-controller="DetailsController">
+    <div class="small-12 medium-9 columns result">
+        <a ng-click="goBack()" class="button button-back bump20"><i class="fa fa-chevron-circle-left" aria-hidden="true"></i> back to search results</a>
+        <h3 class="bump20"><span ng-if="data.phase != 'N/A'">{{ data.phase }}: </span>{{ data.official_title }}</h3>
+        <p class="result-part">{{ data.brief_summary }}</p>
+        <section class="result-part">
+            <h4 class="related">Eligibility</h4>
+            <p><strong>Age:</strong> Minimum: {{ data.minimum_age }} <span ng-if="data.maximum_age != 'N/A'">& Maximum: {{ data.maximum_age }}</span> </p>
+            <p><strong>Gender: </strong>{{ data.gender }}</p>
+            <p><strong>Accepting healthy volunteers: </strong>{{ data.healthy_volunteers }}</p>
+            <p><strong>Criteria:</strong></p>
+            <p style="white-space: pre-line;"> {{ data.inclusion_criteria }}</p>
+        </section>
+        <section class="result-part" ng-show="data.detailed_description">
+            <div class="related" id="description-headers">Detailed Description <i class="fa fa-plus-circle" id="description-icons"></i></div>
+            <section id="detailed-description">
+                {{ data.detailed_description }}
+            </section>
+        </section>
+        <section class="result-part">
+            <div class="related" id="details-headers">Technical Details
+                <i class="fa fa-plus-circle" id="details-icons"></i>
+            </div>
+            <section id="details">
+                <h5 ng-show="data.overall_outcome.length > 0">Overall Officials</h5>
+                <div ng-repeat="official in data.overall_officials">
+                    <p>{{ official.last_name[0] }} ( {{ official.role[0] }} ) </p>
+                </div>
+                <h5 class="outcome-measure" >Primary outcome measures</h5>
+                <div ng-repeat="outcome in data.primary_outcome">
+                    <div class="outcome-header">{{ outcome.measure[0] }}</div>
+                    <ul>
+                        <li>Time frame: {{ outcome.time_frame[0] }}
+                        <li>Safety issue: {{ outcome.safety_issue[0] }}
+                    </ul>
+                </div>
+                <h5 class="outcome-measure" ng-show="data.secondary_outcome.length > 0">Secondary outcome measures</h5>
+                <div ng-repeat="outcome in data.secondary_outcome">
+                    <div class="outcome-header">{{ outcome.measure[0] }}</div>
+                    <ul>
+                        <li>Time frame: {{ outcome.time_frame[0] }}
+                        <li>Safety issue: {{ outcome.safety_issue[0] }}
+                    </ul>
+                </div>
+            </section>
+        </section>
+        <section class="result-part" ng-show="data.keywords">
+            <div class="related">Keywords</div>
+            <span class="keyword" ng-repeat="keyword in data.keywords"><a href="/search-results/{{ encodeURI(keyword) }}">{{ keyword }}</a></span>
+        </section>
+    </div>
+    <div class="small-12 medium-3 columns">
+        <div ng-show="data.contact" class="contact-us" id="contact">
+            <div class="lead-gray">Contact Us</div>
+            <div class="contact-screen">
+                Call, email or leave a message for the research coordnator to see if this trial is right for you. 
+            </div>
+            <div class="contact-info">
+                <ul>
+                    <li><i class="fa fa-user fa-fw" aria-hidden="true"></i> {{ data.contact.first_name[0] }} {{ data.contact.last_name[0] }}</li>
+                    <li ng-show="data.contact.phone[0]"><i class="fa fa-phone fa-fw" aria-hidden="true"></i> Call {{ data.contact.phone[0] }}</li>
+                    <li><i class="fa fa-envelope fa-fw" aria-hidden="true"></i> <a href="mailto:{{ data.contact.email[0] }}">{{ data.contact.email[0] }}</a></li>
+                </ul>
+            </div>
+            <a href="#" class="button" data-open="send-msg"><i class="fa fa-envelope-o fa-fw"></i> Send a message</a>
+        </div>
+    </div>
+</div>
+<div class="reveal" id="send-msg" data-reveal ng-controller="DetailsController">
+    <h3>Send a message</h3>
+    <p>
+        to: <strong>{{ data.contact.first_name[0] }} {{ data.contact.last_name[0] }}</strong>
+    </p>
+    <p>Study:<br>
+        <span>{{ data.official_title }}</span>
+    </p>
+    <div>
+        <label>Your name*:
+        <input type="text" placeholder="Name">
+        </label>
+    </div>
+    <div>
+        <label>
+        Message*:
+        <textarea name="msg" cols="30" rows="10"></textarea>
+        <small style="margin-top: -15px; display: block;">* indicates a required field</small>
+        </label>
+    </div>
+    <div style="margin-top: 15px;">
+        Preferred method of contact:<br>
+        <input id="phone" type="checkbox"><label for="phone">Phone</label><br>
+        <div class="phone-msg">
+            <label>Phone number:
+            <input type="text" placeholder="Enter phone number here" />
+            </label>
+        </div>
+        <input id="email" type="checkbox"><label for="email">Email</label>
+        <div class="email-msg">
+            <label>Email:
+            <input type="text" placeholder="Enter email here" />
+            </label>
+        </div>
+    </div>
+    <div>
+        Send a copy of this message to myself: 
+        <input id="copy" type="checkbox"><label for="copy">Yes</label>
+    </div>
+    <div>
+    </div>
+    <div id="send-button">
+        <a href="#" data-close data-open="thank-you-modal" class="button">Send message</a>
+        <p>
+            <small>This site does not store any personal information. Only the recipient of this message will have access to this information.</small>
+        </p>
+    </div>
+    <button class="close-button" data-close aria-label="Close modal" type="button">
+    <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="reveal" id="thank-you-modal" data-reveal ng-controller="DetailsController">
+        <h3>Thank you</h3>
+    
+    <div >
+        <a href="#" data-close class="button">Close</a>
+        <p>
+            <small>This site does not store any personal information. Only the recipient of this message will have access to this information.</small>
+        </p>
+    </div>
+    <button class="close-button" data-close aria-label="Close modal" type="button">
+    <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="row">
+    <div class="fieldset-helpful text-center">
+        <div class="help-intro text-center">We are constantly trying to improve our clinical research pages,<br>please help us improve this page by leaving feedback below.</div>
+        <div class="help-form text-center">
+            <strong ng-hide="helpful == 0 || helpful == 1">Was this clinical research description helpful?</strong>
+            <div>
+                <button style="width: 120px" href="#" ng-click="helpful = 1" ng-hide="helpful == 0 || helpful == 1" class="button">Yes</button>
+                <button style="width: 120px" href="#" ng-click="helpful = 0" ng-hide="helpful == 0 || helpful == 1"  class="button">No</button>
+            </div>
+            <div>
+                <textarea placeholder="Please enter your comments or concerns here." type="textarea" ng-model="reason" ng-show="helpful == 0" rows="5"></textarea>
+                <button class="button" ng-show="helpful == 0">Submit Feedback</button>
+                <div ng-show="helpful == 0">
+                    Feedback is anonymous and no personal data will be collected, if you have a question about the research iteself, please use our <a data-open="send-msg">contact form</a>.
+                </div>
+                <strong ng-show="helpful == 1">Thank you for your feedback!</strong>
+            </div>
+        </div>
+    </div>
+    <div class="footer-top">
+        <a href="#top"><i class="fa fa-arrow-circle-o-up" aria-hidden="true"></i> Back to Top</a>
+    </div>
+</div>
+<script>
+    var data = <%- JSON.stringify(data) %>;
+</script>
+<% include footer %>
